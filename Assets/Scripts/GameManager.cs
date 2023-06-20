@@ -145,6 +145,7 @@ public class GameManager : MonoBehaviour
         if (playersTurnCount == 3)
             playersTurn = PlayerColors.Yellow;
 
+        currentEffect = m_effectBase;
         DisplayManager.Instance.DisplayNewEffect(m_effectBase);
     }
 
