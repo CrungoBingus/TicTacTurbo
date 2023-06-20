@@ -28,8 +28,12 @@ public class GameManager : MonoBehaviour
     public TileStates[,] GameBoard = new TileStates[12, 12];
     GameObject[,] GameTiles = new GameObject[12, 12];
 
+    [HideInInspector] public bool isBusy = false;
+
     [HideInInspector] public PlayerColors playersTurn = PlayerColors.Red;
     int playersTurnCount = 0;
+
+    public int currentEffect = 0;
 
     [Header("Backend GOs")]
     public GameObject building;
@@ -70,10 +74,13 @@ public class GameManager : MonoBehaviour
         PlayerMotor.Instance.StartPlayerMotor();
 
         StartCoroutine(BuildBoard());
+
+        playersTurnCount = PhotonNetwork.PlayerList.Length;
     }
 
     IEnumerator BuildBoard()
     {
+        isBusy = true;
         for (int x = 0; x < _boardSize; x++)
         {
             for (int y = 0; y < _boardSize; y++)
@@ -94,6 +101,11 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(0.01f);
             }
         }
+        isBusy = false;
+
+        if (PhotonNetwork.IsMasterClient)
+            MoveToNextTurn();
+
         yield return null;
     }
 
@@ -114,12 +126,13 @@ public class GameManager : MonoBehaviour
     
     public void MoveToNextTurn()
     {
-        _myPhotonView.RPC(nameof(MoveToNextTurnNetworked), RpcTarget.All);
+        currentEffect = EffectManager.Instance.GetNewRandomEffect();
+        _myPhotonView.RPC(nameof(MoveToNextTurnNetworked), RpcTarget.All, currentEffect);
     } 
     [PunRPC]
-    void MoveToNextTurnNetworked()
+    void MoveToNextTurnNetworked(int m_effectBase)
     {
-        playersTurnCount++;
+        playersTurnCount++; 
         if (playersTurnCount >= PhotonNetwork.PlayerList.Length)
             playersTurnCount = 0;
 
@@ -131,6 +144,8 @@ public class GameManager : MonoBehaviour
             playersTurn = PlayerColors.Green;
         if (playersTurnCount == 3)
             playersTurn = PlayerColors.Yellow;
+
+        DisplayManager.Instance.DisplayNewEffect(m_effectBase);
     }
 
     void AssignPlayerColors()

@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class eBonusBuild : Effect_BASE
+using System.Collections;
+
+public class eRapidDevelopement : Effect_BASE
 {
     public override void RunEffect(PlayerColors m_pc)
     {
