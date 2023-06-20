@@ -5,6 +5,8 @@ using UnityEngine;
 
 using Photon.Pun;
 
+using JSAM;
+
 public enum PlayerColors
 {
     Red,
@@ -95,6 +97,7 @@ public class GameManager : MonoBehaviour
                 m_tile.x = x;
                 m_tile.y = y;
 
+                JSAM.AudioManager.PlaySound(SFXSounds.summonbasetile, m_gameTile.transform.position);
                 yield return new WaitForSeconds(0.01f);
             }
         }
