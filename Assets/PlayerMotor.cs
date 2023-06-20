@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using System.Collections;
+
 public class PlayerMotor : MonoBehaviour
 {
     PlayerColors myColor;
@@ -10,8 +12,6 @@ public class PlayerMotor : MonoBehaviour
     //
     // Later make private & allocate with GameManager
     //
-    public Effect_BASE currentEffect;
-
     Camera _myCamera;
 
     Vector2 _mousePosition;
@@ -54,14 +54,15 @@ public class PlayerMotor : MonoBehaviour
             {
                 BaseTile mm_ClickedTile = mm_objectHit.GetComponentInParent<BaseTile>();
 
-                if (GameManager.Instance.GameBoard[mm_ClickedTile.x, mm_ClickedTile.y] == TileStates.Empty)
+                if (GameManager.Instance.GameBoard[mm_ClickedTile.x, mm_ClickedTile.y] == TileStates.Empty &&
+                    !GameManager.Instance.isBusy)
                 {
                     GameManager.Instance.BuildOnTile(myColor, mm_ClickedTile.x, mm_ClickedTile.y);
 
                     //
                     // If ! preliminary Effect
                     //
-                    currentEffect.RunEffect(myColor);
+                    EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].RunEffect(myColor);
 
                     GameManager.Instance.MoveToNextTurn();
                 }
@@ -70,6 +71,9 @@ public class PlayerMotor : MonoBehaviour
     }
     void Hover()
     {
+        if (GameManager.Instance.isBusy)
+            return;
+
         if(Physics.Raycast(_rayOrigin, out _hitInfo))
         {
             var mm_objectHit = _hitInfo.collider;
