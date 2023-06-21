@@ -1,5 +1,6 @@
     public enum SFXSounds {
-        summonbasetile
+        summonbasetile,
+        construct
     }
     public enum SFXMusic {
         matchbegin

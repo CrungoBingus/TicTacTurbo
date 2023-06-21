@@ -7,6 +7,8 @@ using Photon.Pun;
 
 using JSAM;
 
+using UnityEngine.UI;
+
 public enum PlayerColors
 {
     Red,
@@ -51,9 +53,12 @@ public class GameManager : MonoBehaviour
     public Material baseTileMaterialGreen;
     public Material baseTileMaterialYellow;
 
+    public Image UIBackground;
+
     [Space(15)]
     public Material baseMaterial;
     public Material baseHoverMaterial;
+
 
     [HideInInspector] public int _boardSize = 12;
 
@@ -122,6 +127,7 @@ public class GameManager : MonoBehaviour
         Destroy(GameTiles[x, y].gameObject);
         GameObject newBuilding = Instantiate(building, m_tilePosition, Quaternion.identity);
         newBuilding.GetComponentInChildren<MeshRenderer>().material = ReturnMaterialForBuilding(m_pc);
+        JSAM.AudioManager.PlaySound(SFXSounds.construct, newBuilding.transform.position);
     }
     
     public void MoveToNextTurn()
@@ -145,10 +151,21 @@ public class GameManager : MonoBehaviour
         if (playersTurnCount == 3)
             playersTurn = PlayerColors.Yellow;
 
+        StartCoroutine(ChangeUIColor(1f));
+
         currentEffect = m_effectBase;
         DisplayManager.Instance.DisplayNewEffect(m_effectBase);
     }
-
+    IEnumerator ChangeUIColor(float duration)
+    {
+        float time = 0;
+        while (time < duration)
+        {
+            UIBackground.color = Color.Lerp(UIBackground.color, ReturnMaterialForBuilding(playersTurn).color, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+    }
     void AssignPlayerColors()
     {
         if(PhotonNetwork.IsMasterClient)
