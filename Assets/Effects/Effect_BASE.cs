@@ -11,6 +11,7 @@ using UnityEngine;
 public class Effect_BASE : MonoBehaviour
 {
     public string effectName;
+    public Sprite effectIcon;
     [TextArea] public string effectDescription;
 
     public virtual void RunEffect(PlayerColors m_pc)

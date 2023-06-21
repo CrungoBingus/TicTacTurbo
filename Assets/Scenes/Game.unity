@@ -612,7 +612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &702801044
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1512,7 +1512,6 @@ GameObject:
   - component: {fileID: 1730140643}
   - component: {fileID: 1730140646}
   - component: {fileID: 1730140645}
-  - component: {fileID: 1730140644}
   m_Layer: 5
   m_Name: UI-BG
   m_TagString: Untagged
@@ -1540,21 +1539,6 @@ RectTransform:
   m_AnchoredPosition: {x: -99, y: 0}
   m_SizeDelta: {x: 677.5095, y: 221.6621}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1730140644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1730140642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.48235294}
-  m_EffectDistance: {x: 1, y: -11.3}
-  m_UseGraphicAlpha: 1
 --- !u!114 &1730140645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1838,6 +1822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectName: Rapid Developement
+  effectIcon: {fileID: 0}
   effectDescription: After building a tile, another one is automatically placed randomly!
 --- !u!114 &2090878566
 MonoBehaviour:
@@ -1852,4 +1837,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectName: Mass Developement
+  effectIcon: {fileID: 0}
   effectDescription: After building a tile, two more are automatically placed randomly!
