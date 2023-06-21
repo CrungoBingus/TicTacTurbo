@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
     public TileStates[,] GameBoard = new TileStates[12, 12];
     GameObject[,] GameTiles = new GameObject[12, 12];
 
+    public Transform _pointOfInterest;
+
     [HideInInspector] public bool isBusy = false;
 
     [HideInInspector] public PlayerColors playersTurn = PlayerColors.Red;
@@ -121,7 +123,10 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     void BuildOnTileNetworked(PlayerColors m_pc, int x, int y)
     {
-        Vector3 m_tilePosition = GameTiles[x, y].transform.position;
+        Vector3 m_tilePosition = Vector3.zero;
+        if (GameTiles[x,y] != null)
+            m_tilePosition = GameTiles[x, y].transform.position;
+        _pointOfInterest.position = m_tilePosition;
 
         GameBoard[x, y] = TileStates.Built;
         Destroy(GameTiles[x, y].gameObject);
