@@ -64,6 +64,7 @@ public class PlayerMotor : MonoBehaviour
                     GameManager.Instance.targetTileState &&
                     !GameManager.Instance.isBusy)
                 {
+                    JSAM.AudioManager.PlaySound(SFXSounds.boardselect);
                     _myPhotonView.RPC(nameof(Building), RpcTarget.All, mm_ClickedTile.x, mm_ClickedTile.y);
                 }
             }
@@ -78,7 +79,7 @@ public class PlayerMotor : MonoBehaviour
         {
             var mm_objectHit = _hitInfo.collider;
 
-            if (mm_objectHit.GetComponentInParent<BaseTile>())
+            if (mm_objectHit.GetComponentInParent<BaseTile>() && GameManager.Instance.playersTurn == myColor)
             {
                 mm_objectHit.GetComponentInParent<BaseTile>().IsHovered(GameManager.Instance.baseHoverMaterial);
             }
