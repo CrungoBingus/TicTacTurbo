@@ -429,8 +429,8 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 6
-    m_Time: 0.5
+    m_Style: 1
+    m_Time: 0.35
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -1497,7 +1497,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1219680789
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2612,7 +2612,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectName: Rapid Developement
   effectIcon: {fileID: 0}
-  effectDescription: After building a tile, another one is automatically placed randomly!
+  effectDescription: +1 Bonus Building (Random)!
   isPreliminary: 0
   targetTileState: 0
 --- !u!114 &2090878566
@@ -2629,7 +2629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectName: Mass Developement
   effectIcon: {fileID: 0}
-  effectDescription: After building a tile, two more are automatically placed randomly!
+  effectDescription: +2 Bonus Building (Random)!
   isPreliminary: 0
   targetTileState: 0
 --- !u!114 &2090878567
@@ -2646,6 +2646,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectName: Hostile Takeover
   effectIcon: {fileID: 0}
-  effectDescription: Replace another players building with you own
+  effectDescription: Steal Another Players Building!
   isPreliminary: 1
   targetTileState: 1

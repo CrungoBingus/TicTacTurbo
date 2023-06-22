@@ -111,6 +111,8 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(0.01f);
             }
         }
+        yield return new WaitForSeconds(1f);
+
         isBusy = false;
 
         if (PhotonNetwork.IsMasterClient)
@@ -131,7 +133,6 @@ public class GameManager : MonoBehaviour
             m_tilePosition = GameTiles[x, y].transform.position;
         _pointOfInterest.position = m_tilePosition;
 
-        Debug.Log("03: Building: " + x.ToString() + y.ToString());
         Destroy(GameTiles[x, y].gameObject);
 
         GameObject newBuilding = Instantiate(building, m_tilePosition, Quaternion.identity);
@@ -141,19 +142,15 @@ public class GameManager : MonoBehaviour
         newBuilding.GetComponent<BaseTile>().x = x;
         newBuilding.GetComponent<BaseTile>().y = y;
 
-        Debug.Log("04: Built: " + newBuilding.GetComponent<BaseTile>().x.ToString() +
-            newBuilding.GetComponent<BaseTile>().y.ToString());
         GameTiles[x, y] = newBuilding;
         GameBoard[x, y] = TileStates.Built;
-        Debug.Log("05: Confirm Building: " + GameTiles[x, y].GetComponent<BaseTile>().x.ToString() +
-            GameTiles[x, y].GetComponent<BaseTile>().y.ToString());
 
         JSAM.AudioManager.PlaySound(SFXSounds.construct, newBuilding.transform.position);
     }
 
     public void DestroyOnTile(PlayerColors m_pc, int x, int y)
     {
-        _myPhotonView.RPC(nameof(BuildOnTileNetworked), RpcTarget.All, m_pc, x, y);
+        _myPhotonView.RPC(nameof(DestroyOnTileNetworked), RpcTarget.All, m_pc, x, y);
     }
     [PunRPC]
     void DestroyOnTileNetworked(PlayerColors m_pc, int x, int y)
@@ -163,19 +160,17 @@ public class GameManager : MonoBehaviour
             m_tilePosition = GameTiles[x, y].transform.position;
         _pointOfInterest.position = m_tilePosition;
 
-        GameBoard[x, y] = TileStates.Empty;
         Destroy(GameTiles[x, y].gameObject);
-
-        _pointOfInterest.position = m_tilePosition;
 
         GameObject newTile = Instantiate(baseTile, m_tilePosition, Quaternion.identity);
 
-        newTile.GetComponentInChildren<MeshRenderer>().material = ReturnMaterialForTile(x,y);
+        newTile.GetComponentInChildren<MeshRenderer>().material = ReturnMaterialForBuilding(m_pc);
         newTile.GetComponent<BaseTile>().defualtMaterial = ReturnMaterialForBuilding(m_pc);
+        newTile.GetComponent<BaseTile>().x = x;
+        newTile.GetComponent<BaseTile>().y = y;
 
         GameTiles[x, y] = newTile;
-
-        _pointOfInterest.position = m_tilePosition;
+        GameBoard[x, y] = TileStates.Empty;
 
         JSAM.AudioManager.PlaySound(SFXSounds.construct, newTile.transform.position);
     }

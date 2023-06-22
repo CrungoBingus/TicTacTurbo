@@ -38,7 +38,7 @@ public class DisplayManager : MonoBehaviour
         roundColor.text = GameManager.Instance.playersTurn.ToString() + "'s Turn!";
         roundNumber.text = "Round: " + GameManager.Instance.gameRoundCount.ToString();
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         roundParent.SetActive(false);
         GameManager.Instance.isBusy = false;
@@ -59,7 +59,7 @@ public class DisplayManager : MonoBehaviour
         effectName.text = EffectManager.Instance.gameEffects[m_effectBase].effectName;
         effectDescription.text = EffectManager.Instance.gameEffects[m_effectBase].effectDescription;
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
 
         effectParent.SetActive(false);
         GameManager.Instance.isBusy = false;

@@ -103,12 +103,12 @@ public class PlayerMotor : MonoBehaviour
             EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].isPreliminary)
         {
             EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].RunEffect(myColor);
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1.5f);
         }
+        else 
+            GameManager.Instance._pointOfInterest.position = new Vector3(x * 1.25f, 0, y * 1.25f);
 
-        GameManager.Instance._pointOfInterest.position = new Vector3(x * 1.25f, 0, y * 1.25f);
-
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.8f);
 
         if (myColor == GameManager.Instance.playersTurn)
         {
@@ -116,21 +116,22 @@ public class PlayerMotor : MonoBehaviour
             GameManager.Instance.GameBoard[x, y] = TileStates.Built;
         }
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.8f);
 
-        if (myColor == GameManager.Instance.playersTurn 
+        if (myColor == GameManager.Instance.playersTurn
             && !EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].isPreliminary)
+        {
             EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].RunEffect(myColor);
-
-        yield return new WaitForSeconds(2f);
-
-        CameraMotor.Instance.SwitchCamera(0);
-
-        yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1.5f);
+        }
 
         GameManager.Instance.isBusy = false;
         if (PhotonNetwork.IsMasterClient)
             GameManager.Instance.MoveToNextTurn();
+
+        yield return new WaitForSeconds(0.35f);
+
+        CameraMotor.Instance.SwitchCamera(0);
 
         yield return null;
     }
