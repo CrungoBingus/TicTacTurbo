@@ -22,6 +22,8 @@ public class eMassDevelopement : Effect_BASE
             } while (m_gameTileState[m_x, m_y] == TileStates.Built);
 
             GameManager.Instance.BuildOnTile(m_pc, m_x, m_y);
+            GameManager.Instance.GameBoard[m_x, m_y] = TileStates.Built;
+
             yield return new WaitForSeconds(1f);
         }
     }

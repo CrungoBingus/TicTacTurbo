@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
     PhotonView _myPhotonView;
 
     public TileStates[,] GameBoard = new TileStates[12, 12];
+    public TileStates targetTileState = TileStates.Empty;
+
     GameObject[,] GameTiles = new GameObject[12, 12];
 
     public Transform _pointOfInterest;
@@ -36,6 +38,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public PlayerColors playersTurn = PlayerColors.Red;
     int playersTurnCount = 0;
+    [HideInInspector] public int gameRoundCount = 1;
 
     public int currentEffect = 0;
 
@@ -128,24 +131,72 @@ public class GameManager : MonoBehaviour
             m_tilePosition = GameTiles[x, y].transform.position;
         _pointOfInterest.position = m_tilePosition;
 
-        GameBoard[x, y] = TileStates.Built;
+        Debug.Log("03: Building: " + x.ToString() + y.ToString());
         Destroy(GameTiles[x, y].gameObject);
+
         GameObject newBuilding = Instantiate(building, m_tilePosition, Quaternion.identity);
+
         newBuilding.GetComponentInChildren<MeshRenderer>().material = ReturnMaterialForBuilding(m_pc);
+        newBuilding.GetComponent<BaseTile>().defualtMaterial = ReturnMaterialForBuilding(m_pc);
+        newBuilding.GetComponent<BaseTile>().x = x;
+        newBuilding.GetComponent<BaseTile>().y = y;
+
+        Debug.Log("04: Built: " + newBuilding.GetComponent<BaseTile>().x.ToString() +
+            newBuilding.GetComponent<BaseTile>().y.ToString());
+        GameTiles[x, y] = newBuilding;
+        GameBoard[x, y] = TileStates.Built;
+        Debug.Log("05: Confirm Building: " + GameTiles[x, y].GetComponent<BaseTile>().x.ToString() +
+            GameTiles[x, y].GetComponent<BaseTile>().y.ToString());
+
         JSAM.AudioManager.PlaySound(SFXSounds.construct, newBuilding.transform.position);
     }
-    
+
+    public void DestroyOnTile(PlayerColors m_pc, int x, int y)
+    {
+        _myPhotonView.RPC(nameof(BuildOnTileNetworked), RpcTarget.All, m_pc, x, y);
+    }
+    [PunRPC]
+    void DestroyOnTileNetworked(PlayerColors m_pc, int x, int y)
+    {
+        Vector3 m_tilePosition = Vector3.zero;
+        if (GameTiles[x, y] != null)
+            m_tilePosition = GameTiles[x, y].transform.position;
+        _pointOfInterest.position = m_tilePosition;
+
+        GameBoard[x, y] = TileStates.Empty;
+        Destroy(GameTiles[x, y].gameObject);
+
+        _pointOfInterest.position = m_tilePosition;
+
+        GameObject newTile = Instantiate(baseTile, m_tilePosition, Quaternion.identity);
+
+        newTile.GetComponentInChildren<MeshRenderer>().material = ReturnMaterialForTile(x,y);
+        newTile.GetComponent<BaseTile>().defualtMaterial = ReturnMaterialForBuilding(m_pc);
+
+        GameTiles[x, y] = newTile;
+
+        _pointOfInterest.position = m_tilePosition;
+
+        JSAM.AudioManager.PlaySound(SFXSounds.construct, newTile.transform.position);
+    }
+
     public void MoveToNextTurn()
     {
-        currentEffect = EffectManager.Instance.GetNewRandomEffect();
+        do
+        {
+            currentEffect = EffectManager.Instance.GetNewRandomEffect();
+        } while (gameRoundCount == 1 & EffectManager.Instance.gameEffects[currentEffect].isPreliminary);
         _myPhotonView.RPC(nameof(MoveToNextTurnNetworked), RpcTarget.All, currentEffect);
     } 
     [PunRPC]
     void MoveToNextTurnNetworked(int m_effectBase)
     {
-        playersTurnCount++; 
+        playersTurnCount++;
         if (playersTurnCount >= PhotonNetwork.PlayerList.Length)
+        {
             playersTurnCount = 0;
+            gameRoundCount++;
+        }
 
         if (playersTurnCount == 0)
             playersTurn = PlayerColors.Red;
@@ -159,7 +210,8 @@ public class GameManager : MonoBehaviour
         StartCoroutine(ChangeUIColor(1f));
 
         currentEffect = m_effectBase;
-        DisplayManager.Instance.DisplayNewEffect(m_effectBase);
+        targetTileState = EffectManager.Instance.gameEffects[currentEffect].targetTileState;
+        DisplayManager.Instance.DisplayNewRound(m_effectBase);
     }
     IEnumerator ChangeUIColor(float duration)
     {

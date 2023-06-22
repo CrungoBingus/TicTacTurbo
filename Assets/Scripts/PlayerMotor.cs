@@ -49,6 +49,7 @@ public class PlayerMotor : MonoBehaviour
         if (!Input.GetMouseButtonDown(0) || myColor != GameManager.Instance.playersTurn)
             return;
 
+        Debug.Log("01: Entered Click Cast");
         if (Physics.Raycast(_rayOrigin, out _hitInfo))
         {
             var mm_objectHit = _hitInfo.collider;
@@ -57,7 +58,10 @@ public class PlayerMotor : MonoBehaviour
             {
                 BaseTile mm_ClickedTile = mm_objectHit.GetComponentInParent<BaseTile>();
 
-                if (GameManager.Instance.GameBoard[mm_ClickedTile.x, mm_ClickedTile.y] == TileStates.Empty &&
+                Debug.Log("02: Found Base Tile " + GameManager.Instance.GameBoard[mm_ClickedTile.x, mm_ClickedTile.y]);
+
+                if (GameManager.Instance.GameBoard[mm_ClickedTile.x, mm_ClickedTile.y] == 
+                    GameManager.Instance.targetTileState &&
                     !GameManager.Instance.isBusy)
                 {
                     _myPhotonView.RPC(nameof(Building), RpcTarget.All, mm_ClickedTile.x, mm_ClickedTile.y);
@@ -92,16 +96,30 @@ public class PlayerMotor : MonoBehaviour
         CameraMotor.Instance.SwitchCamera(1);
         GameManager.Instance.isBusy = true;
 
+        //
+        // Prelim effect
+        //
+        if (myColor == GameManager.Instance.playersTurn &&
+            EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].isPreliminary)
+        {
+            EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].RunEffect(myColor);
+            yield return new WaitForSeconds(2f);
+        }
+
         GameManager.Instance._pointOfInterest.position = new Vector3(x * 1.25f, 0, y * 1.25f);
 
         yield return new WaitForSeconds(1f);
 
-        if(myColor == GameManager.Instance.playersTurn)
+        if (myColor == GameManager.Instance.playersTurn)
+        {
             GameManager.Instance.BuildOnTile(myColor, x, y);
+            GameManager.Instance.GameBoard[x, y] = TileStates.Built;
+        }
 
         yield return new WaitForSeconds(1.5f);
 
-        if (myColor == GameManager.Instance.playersTurn)
+        if (myColor == GameManager.Instance.playersTurn 
+            && !EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].isPreliminary)
             EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].RunEffect(myColor);
 
         yield return new WaitForSeconds(2f);
@@ -111,7 +129,7 @@ public class PlayerMotor : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         GameManager.Instance.isBusy = false;
-        if (myColor == GameManager.Instance.playersTurn)
+        if (PhotonNetwork.IsMasterClient)
             GameManager.Instance.MoveToNextTurn();
 
         yield return null;

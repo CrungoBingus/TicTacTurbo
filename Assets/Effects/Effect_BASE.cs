@@ -14,8 +14,16 @@ public class Effect_BASE : MonoBehaviour
     public Sprite effectIcon;
     [TextArea] public string effectDescription;
 
+    public bool isPreliminary = false;
+
+    public TileStates targetTileState = TileStates.Empty;
+
     public virtual void RunEffect(PlayerColors m_pc)
     {
         // BITCH!
+    }
+    public virtual void RunEffect(PlayerColors m_pc, int x, int y)
+    {
+
     }
 }
