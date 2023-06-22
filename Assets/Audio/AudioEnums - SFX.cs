@@ -1,6 +1,7 @@
     public enum SFXSounds {
         summonbasetile,
-        construct
+        construct,
+        boardselect
     }
     public enum SFXMusic {
         matchbegin

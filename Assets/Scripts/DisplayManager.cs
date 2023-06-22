@@ -28,19 +28,22 @@ public class DisplayManager : MonoBehaviour
     {
         StartCoroutine(nameof(DisplayNewRoundEnum), m_effectBase);
     }
+
     IEnumerator DisplayNewRoundEnum(int m_effectBase)
     {
         GameManager.Instance.isBusy = true;
-        roundParent.SetActive(true);
+        /*roundParent.SetActive(false);
+        roundParent.SetActive(true);*/
+        roundParent.GetComponent<Animator>().SetBool("playAnim", true);
 
-        roundBackgroundImage.color = GameManager.Instance.ReturnMaterialForBuilding(GameManager.Instance.playersTurn).color;
+        //roundBackgroundImage.color = GameManager.Instance.ReturnMaterialForBuilding(GameManager.Instance.playersTurn).color;
 
-        roundColor.text = GameManager.Instance.playersTurn.ToString() + "'s Turn!";
-        roundNumber.text = "Round: " + GameManager.Instance.gameRoundCount.ToString();
+        //roundColor.text = GameManager.Instance.playersTurn.ToString() + "'s Turn!";
+        //roundNumber.text = "Round: " + GameManager.Instance.gameRoundCount.ToString();
 
         yield return new WaitForSeconds(2f);
-
-        roundParent.SetActive(false);
+        roundParent.GetComponent<Animator>().SetBool("playAnim", false);
+        //roundParent.SetActive(false);
         GameManager.Instance.isBusy = false;
 
         DisplayNewEffect(m_effectBase);
