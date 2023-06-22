@@ -32,20 +32,14 @@ public class DisplayManager : MonoBehaviour
     IEnumerator DisplayNewRoundEnum(int m_effectBase)
     {
         GameManager.Instance.isBusy = true;
-        /*roundParent.SetActive(false);
-        roundParent.SetActive(true);*/
+
         roundParent.GetComponent<Animator>().SetBool("playAnim", true);
 
-        //roundBackgroundImage.color = GameManager.Instance.ReturnMaterialForBuilding(GameManager.Instance.playersTurn).color;
+        yield return new WaitForSeconds(1.5f);
 
-        //roundColor.text = GameManager.Instance.playersTurn.ToString() + "'s Turn!";
-        //roundNumber.text = "Round: " + GameManager.Instance.gameRoundCount.ToString();
-
-        yield return new WaitForSeconds(1f);
-
-        yield return new WaitForSeconds(2f);
         roundParent.GetComponent<Animator>().SetBool("playAnim", false);
-        //roundParent.SetActive(false);
+
+        yield return new WaitForSeconds(.5f);
 
         GameManager.Instance.isBusy = false;
 

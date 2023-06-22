@@ -104,12 +104,12 @@ public class PlayerMotor : MonoBehaviour
             EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].isPreliminary)
         {
             EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].RunEffect(myColor);
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2.5f);
         }
         else 
             GameManager.Instance._pointOfInterest.position = new Vector3(x * 1.25f, 0, y * 1.25f);
 
-        yield return new WaitForSeconds(.8f);
+        yield return new WaitForSeconds(1f);
 
         if (myColor == GameManager.Instance.playersTurn)
         {
@@ -117,13 +117,13 @@ public class PlayerMotor : MonoBehaviour
             GameManager.Instance.GameBoard[x, y] = TileStates.Built;
         }
 
-        yield return new WaitForSeconds(.8f);
+        yield return new WaitForSeconds(1f);
 
         if (myColor == GameManager.Instance.playersTurn
             && !EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].isPreliminary)
         {
             EffectManager.Instance.gameEffects[GameManager.Instance.currentEffect].RunEffect(myColor);
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(2.5f);
         }
 
         GameManager.Instance.isBusy = false;
