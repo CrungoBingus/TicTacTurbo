@@ -41,15 +41,13 @@ public class DisplayManager : MonoBehaviour
         //roundColor.text = GameManager.Instance.playersTurn.ToString() + "'s Turn!";
         //roundNumber.text = "Round: " + GameManager.Instance.gameRoundCount.ToString();
 
-<<<<<<< HEAD
         yield return new WaitForSeconds(1f);
 
         roundParent.SetActive(false);
-=======
         yield return new WaitForSeconds(2f);
         roundParent.GetComponent<Animator>().SetBool("playAnim", false);
         //roundParent.SetActive(false);
->>>>>>> 7b0e21baaec4cea006e5d226e1c3451432b910e5
+
         GameManager.Instance.isBusy = false;
 
         DisplayNewEffect(m_effectBase);
