@@ -43,7 +43,6 @@ public class DisplayManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        roundParent.SetActive(false);
         yield return new WaitForSeconds(2f);
         roundParent.GetComponent<Animator>().SetBool("playAnim", false);
         //roundParent.SetActive(false);
