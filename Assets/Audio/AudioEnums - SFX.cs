@@ -4,5 +4,6 @@
         boardselect
     }
     public enum SFXMusic {
-        matchbegin
+        matchbegin,
+        matchmusic
     }

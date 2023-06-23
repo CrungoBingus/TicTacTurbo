@@ -61,6 +61,11 @@ public class DisplayManager : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
+        if (!JSAM.AudioManager.IsSoundPlaying(SFXMusic.matchmusic))
+        {
+            JSAM.AudioManager.PlayMusic(SFXMusic.matchmusic);
+        }
+
         effectParent.SetActive(false);
         GameManager.Instance.isBusy = false;
     }
